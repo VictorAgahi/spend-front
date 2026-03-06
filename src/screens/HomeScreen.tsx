@@ -1,11 +1,13 @@
 import { View, StyleSheet } from "react-native";
-import { ScreenHeader, ActionButton } from "@/components";
+import { ScreenHeader, ActionButton, PingNotification } from "@/components";
 
 export function HomeScreen(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <ScreenHeader title="spendApp" subtitle="Connect. Volunteer. Impact." />
       <View style={styles.content}>
+        <PingNotification />
+        <View style={styles.spacer} />
         <ActionButton label="Get Started" onPress={() => undefined} />
         <View style={styles.spacer} />
         <ActionButton
