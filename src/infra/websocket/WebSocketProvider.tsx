@@ -4,15 +4,24 @@ import { WsEventPayloadMap, WsEventCallback } from './types';
 
 interface WebSocketContextType {
   isConnected: boolean;
+  username: string;
+  userColor: string;
+  currentRoom: string | null;
   emit: <K extends keyof WsEventPayloadMap>(event: K, data: WsEventPayloadMap[K]) => void;
   on: <K extends keyof WsEventPayloadMap>(event: K, callback: WsEventCallback<K>) => void;
   off: <K extends keyof WsEventPayloadMap>(event: K, callback: WsEventCallback<K>) => void;
+  setCurrentRoom: (room: string | null) => void;
 }
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined);
 
+const COLORS = ['#6c5ce7', '#ff7675', '#55efc4', '#fdcb6e', '#00cec9', '#e84393'];
+
 export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
+  const [currentRoom, setCurrentRoom] = useState<string | null>(null);
+  const [username] = useState(`User_${Math.floor(Math.random() * 1000)}`);
+  const [userColor] = useState(COLORS[Math.floor(Math.random() * COLORS.length)]);
 
   useEffect(() => {
     socketService.connect();
@@ -34,9 +43,13 @@ export const WebSocketProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const value: WebSocketContextType = {
     isConnected,
+    username,
+    userColor,
+    currentRoom,
     emit: socketService.emit.bind(socketService),
     on: socketService.on.bind(socketService),
     off: socketService.off.bind(socketService),
+    setCurrentRoom,
   };
 
   return (

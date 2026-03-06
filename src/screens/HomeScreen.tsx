@@ -1,8 +1,11 @@
 import { View, StyleSheet, ScrollView, StatusBar } from "react-native";
 import { ScreenHeader, ActionButton, PingNotification, RoomManager } from "@/components";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 export function HomeScreen(): React.JSX.Element {
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
@@ -15,6 +18,13 @@ export function HomeScreen(): React.JSX.Element {
           <PingNotification />
           <View style={styles.spacer} />
           <RoomManager />
+          <View style={styles.spacer} />
+
+          <ActionButton
+            label="View Live Map"
+            onPress={() => router.push("/map" as any)}
+          />
+
           <View style={styles.spacerHuge} />
           <ActionButton label="Get Started" onPress={() => undefined} />
           <View style={styles.spacer} />

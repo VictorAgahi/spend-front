@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useWebSocket } from '../infra/websocket/useWebSocket';
 import { useWebSocketContext } from '../infra/websocket/WebSocketProvider';
 import { WsEvent, PingRoomPayload } from '../infra/websocket/types';
 import { ActionButton } from './ActionButton';
 
 export const RoomManager: React.FC = () => {
-  const { emit, isConnected } = useWebSocketContext();
-  const [currentRoom, setCurrentRoom] = useState<string | null>(null);
+  const { emit, isConnected, currentRoom, setCurrentRoom, username } = useWebSocketContext();
   const [messages, setMessages] = useState<PingRoomPayload[]>([]);
   const [members, setMembers] = useState<string[]>([]);
-  const [username] = useState(`User_${Math.floor(Math.random() * 1000)}`);
 
   const joinVipRoom = () => {
     const roomName = 'vip-room';
