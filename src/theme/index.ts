@@ -12,7 +12,17 @@ export const colors = {
   warning: '#F59E0B',
   border: '#334155',
   white: '#FFFFFF',
-  black: '#000000'
+  black: '#000000',
+  tagColors: {
+    FOOD: '#F87171',
+    TRANSPORT: '#60A5FA',
+    ENTERTAINMENT: '#A78BFA',
+    SHOPPING: '#F472B6',
+    HEALTH: '#34D399',
+    TRAVEL: '#FBBF24',
+    UTILITIES: '#94A3B8',
+    OTHER: '#64748B',
+  } as Record<string, string>
 };
 
 export const spacing = {

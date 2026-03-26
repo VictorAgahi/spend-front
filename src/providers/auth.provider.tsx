@@ -42,8 +42,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const userData = await AuthService.getMe();
         setUser(userData);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      if (e.response?.status !== 401) {
+        console.error('Initial auth check failed:', e);
+      }
     } finally {
       setIsLoading(false);
     }

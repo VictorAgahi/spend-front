@@ -34,14 +34,17 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const message = error.response?.data?.message || error.message || 'A network error occurred';
+    const is401 = error.response?.status === 401;
 
-    notificationEvents.emit({
-      message,
-      type: 'error'
-    });
+    if (!is401) {
+      const message = error.response?.data?.message || error.message || 'A network error occurred';
+      notificationEvents.emit({
+        message,
+        type: 'error'
+      });
+    }
 
-    if (error.response?.status === 401) {
+    if (is401) {
       await AsyncStorage.removeItem('accessToken');
     }
     return Promise.reject(error);

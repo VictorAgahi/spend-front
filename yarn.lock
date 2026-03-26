@@ -1112,43 +1112,50 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@clement.pasteau/account-service@npm:0.4.4":
-  version: 0.4.4
-  resolution: "@clement.pasteau/account-service@npm:0.4.4"
+"@clement.pasteau/account-service@npm:0.4.7":
+  version: 0.4.7
+  resolution: "@clement.pasteau/account-service@npm:0.4.7"
   dependencies:
-    "@clement.pasteau/shared": "npm:^1.1.0"
+    "@clement.pasteau/shared": "npm:^1.2.2"
     typeorm: "npm:^0.3.28"
-  checksum: 10c0/ad4060e1b68775070443ddfb2c99a744630e4eea7798d7da66147cc6fd8b7132377a8baf4253edca94d8927b2fe1e55f65988ba95785a210b394161803cf2619
+  checksum: 10c0/d5e0f5e0de9fa2d3b3ab0fc774482595aa53ad6cafa1511a104400ebcd387684232822f3236383e595f68d3e24bcc899e53d3b27c5b1b6d2d15f8aa3271c833f
   languageName: node
   linkType: hard
 
-"@clement.pasteau/contracts@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@clement.pasteau/contracts@npm:1.1.0"
+"@clement.pasteau/contracts@npm:1.3.1":
+  version: 1.3.1
+  resolution: "@clement.pasteau/contracts@npm:1.3.1"
   dependencies:
     protobufjs: "npm:7.5.3"
   peerDependencies:
     "@nestjs/microservices": ^11.0.0
     rxjs: ^7.0.0
-  checksum: 10c0/5422837e063e479461c8a82af038d363e43a1c3539bd3bd86b209b1f366977605de011a327b6bd59f531474c2c183550322bed9083de489bc07f9da27b454ea0
+  checksum: 10c0/59087e14f4b3d9509729b415e4a6b771a67aa630dbc6a225605a4f26b34603e1fba327b2746f1d2aad444a8cf248cafcd7fbefbedc218444bf0a0bce322f2bad
   languageName: node
   linkType: hard
 
-"@clement.pasteau/shared@npm:1.1.0, @clement.pasteau/shared@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@clement.pasteau/shared@npm:1.1.0"
-  checksum: 10c0/2232dba733a87703fad30b6059ebcacc3c70ba18010855a5a0a7bc63b4f0878fbc042490b12cb2ee9d135b74bac108c10efe2089e4bfba8cdc1bb4523ab91909
+"@clement.pasteau/shared@npm:1.3.2":
+  version: 1.3.2
+  resolution: "@clement.pasteau/shared@npm:1.3.2"
+  checksum: 10c0/88b7d6d560ad80b15252f8835d147a74740386b0551e7f1c1c5ee4d1ba2c55363160ac4f04c5a6b6b499d72722db0e0869dd68ae575468514e45f3c3464afaf9
   languageName: node
   linkType: hard
 
-"@clement.pasteau/user-service@npm:0.4.2":
-  version: 0.4.2
-  resolution: "@clement.pasteau/user-service@npm:0.4.2"
+"@clement.pasteau/shared@npm:^1.2.2":
+  version: 1.3.0
+  resolution: "@clement.pasteau/shared@npm:1.3.0"
+  checksum: 10c0/e58de2792e219cd30d5313b3a1b43cddaa46a978072b385fb8af43a3851cc4b3d18c0060229d7e048c94a6712cc0b4b7d0fb79ed946281c0e2f506f01b5e887c
+  languageName: node
+  linkType: hard
+
+"@clement.pasteau/user-service@npm:0.4.5":
+  version: 0.4.5
+  resolution: "@clement.pasteau/user-service@npm:0.4.5"
   dependencies:
-    "@clement.pasteau/shared": "npm:^1.1.0"
+    "@clement.pasteau/shared": "npm:^1.2.2"
     reflect-metadata: "npm:^0.2.2"
     typeorm: "npm:^0.3.28"
-  checksum: 10c0/1d02b4ff283da5f7c09d8c0095a40a05b2ecf9b579d5377096e6c459b80775eaf6d8747617e4e835e458cc97ffe079d27cd5d538b8589c3e2560d59f45fe8040
+  checksum: 10c0/3448c7e7d7fb42942a4858731e65bc1c36a189b38bda81d35d076fcc59dc0dcd2ef5c748d56ba2de5dd7ca4e00ee46b005683af7fea36186f2d7c58db14c2545
   languageName: node
   linkType: hard
 
@@ -1902,10 +1909,10 @@ __metadata:
   resolution: "@monorepo/mobile@workspace:."
   dependencies:
     "@babel/core": "npm:^7.26.0"
-    "@clement.pasteau/account-service": "npm:0.4.4"
-    "@clement.pasteau/contracts": "npm:1.1.0"
-    "@clement.pasteau/shared": "npm:1.1.0"
-    "@clement.pasteau/user-service": "npm:0.4.2"
+    "@clement.pasteau/account-service": "npm:0.4.7"
+    "@clement.pasteau/contracts": "npm:1.3.1"
+    "@clement.pasteau/shared": "npm:1.3.2"
+    "@clement.pasteau/user-service": "npm:0.4.5"
     "@expo/vector-icons": "npm:^15.0.3"
     "@nestjs/common": "npm:^11.1.17"
     "@nestjs/core": "npm:^11.1.17"

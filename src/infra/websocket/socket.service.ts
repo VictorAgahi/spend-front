@@ -1,31 +1,35 @@
 import { io, Socket } from 'socket.io-client';
 import { WsEventPayloadMap, WsEventCallback } from './types';
 
-const SOCKET_URL = process.env.EXPO_PUBLIC_WS_URL || 'http://localhost:3001';
+const SOCKET_URL = process.env.EXPO_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3000';
 
 class SocketService {
   private socket: Socket | null = null;
 
-  connect(): void {
-    if (this.socket?.connected) return;
+  connect(token?: string): void {
+    if (this.socket) {
+      if (this.socket.connected) return;
+      this.socket.disconnect();
+    }
 
     this.socket = io(SOCKET_URL, {
       transports: ['websocket'],
       reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 2000,
+      auth: { token },
+      query: token ? { token } : {},
+      extraHeaders: token ? {
+        Authorization: `Bearer ${token}`
+      } : undefined
     });
 
     this.socket.on('connect', () => {
-      console.log('Connected to WebSocket server');
+      console.log('Connected to WebSocket server via Gateway');
     });
 
     this.socket.on('connect_error', (error: Error) => {
       console.error('WebSocket connection error:', error);
-    });
-
-    this.socket.on('disconnect', (reason: string) => {
-      console.log('Disconnected from WebSocket server:', reason);
     });
   }
 

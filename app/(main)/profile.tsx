@@ -56,15 +56,6 @@ export default function Profile() {
 
       <View style={styles.section}>
         <Typography variant="h3" style={styles.sectionTitle}>Account Settings</Typography>
-        {menuItems.map((item, index) => (
-          <Card key={index} variant="flat" padding="md" style={styles.menuItem}>
-            <View style={[styles.iconBox, { backgroundColor: item.color + '15' }]}>
-              <item.icon color={item.color} size={24} />
-            </View>
-            <Typography variant="body" style={styles.menuLabel}>{item.label}</Typography>
-            <Typography variant="body" color={colors.textMuted}>{'>'}</Typography>
-          </Card>
-        ))}
       </View>
 
       <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
@@ -78,7 +69,7 @@ export default function Profile() {
 
       <View style={styles.footer}>
         <Typography variant="caption" color={colors.textMuted}>
-          SpendApp v1.0.0 • Developed with ❤️
+          SpendApp v1.0.0
         </Typography>
       </View>
     </Container>
@@ -145,4 +136,9 @@ const styles = StyleSheet.create({
     marginTop: spacing.xxl,
     marginBottom: spacing.xl,
   },
+  debugCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: colors.primary + '40',
+  }
 });
