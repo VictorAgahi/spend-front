@@ -35,14 +35,12 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   return (
     <NotificationContext.Provider value={{ showToast, error, success }}>
       {children}
-      {toasts.map((toast, index) => (
+      {toasts.map((toast, _index) => (
         <Toast
           key={toast.id}
           message={toast.message}
           type={toast.type}
           onClose={() => removeToast(toast.id)}
-          // Offset each toast if multiple visible
-          // In simpler version, we just stack them or show one by one
         />
       ))}
     </NotificationContext.Provider>

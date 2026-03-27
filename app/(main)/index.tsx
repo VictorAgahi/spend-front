@@ -6,13 +6,16 @@ import { Card } from '../../src/components/atoms/Card';
 import { TransactionForm } from '../../src/components/organisms/TransactionForm';
 import { TransactionItem } from '../../src/components/molecules/TransactionItem';
 import { TransactionService } from '../../src/services/transaction.service';
-import { TransactionResponse } from '../../src/types/transaction.types';
 import { colors, spacing } from '../../src/theme';
 import { useAuth } from '../../src/providers/auth.provider';
+import { CreateTransactionRequest, TransactionResponse } from '../../src/types/transaction.types';
+import { EventTag } from '../../src/components/molecules/TransactionItem';
+import { geocodingConfig } from '../../src/services/geocoding.config';
 
 export default function Dashboard() {
   const [transactions, setTransactions] = useState<TransactionResponse[]>([]);
   const [loading, setLoading] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { user } = useAuth();
 
@@ -20,7 +23,6 @@ export default function Dashboard() {
     setLoading(true);
     try {
       const response = await TransactionService.getTransactions();
-      // Sort by date descending
       const sorted = response.transactions.sort((a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
@@ -34,15 +36,27 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    geocodingConfig.init();
     fetchTransactions();
   }, []);
 
-  const handleCreateTransaction = async (data: any) => {
+  const handleCreateTransaction = async (data: Omit<CreateTransactionRequest, 'userId' | 'provider'>) => {
+    if (!user?.user?.id) {
+      Alert.alert('Error', 'User not found');
+      return;
+    }
+    setCreating(true);
     try {
-      await TransactionService.createTransaction(data);
+      await TransactionService.createTransaction({
+        ...data,
+        provider: geocodingConfig.getProvider(),
+      });
       fetchTransactions();
-    } catch (e: any) {
-      Alert.alert('Error', e.response?.data?.message || 'Could not create transaction');
+    } catch (e: unknown) {
+      const error = e as { response?: { data?: { message?: string } } };
+      Alert.alert('Error', error.response?.data?.message || 'Could not create transaction');
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -67,7 +81,7 @@ export default function Dashboard() {
 
       <View style={styles.actionSection}>
         <Typography variant="h3" style={styles.sectionTitle}>Quick Access</Typography>
-        <TransactionForm onSubmit={handleCreateTransaction} />
+        <TransactionForm onSubmit={handleCreateTransaction} isLoading={creating} />
       </View>
 
       <View style={styles.listSection}>

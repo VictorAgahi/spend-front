@@ -1,5 +1,5 @@
 import React from 'react';
-import MapView, { Marker, UrlTile, Circle } from 'react-native-maps';
+import MapView, { Marker, UrlTile, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme';
 import {
@@ -7,6 +7,7 @@ import {
   TransactionPingedPayload,
   ZoneUpdatedPayload
 } from '@clement.pasteau/shared';
+import { GeocodingProvider } from '../../services/geocoding.config';
 
 interface AppMapProps {
   location: any;
@@ -15,6 +16,7 @@ interface AppMapProps {
   mode: MapMode;
   onRegionChange?: (region: any) => void;
   mapRef?: any;
+  geocodingProvider: GeocodingProvider;
 }
 
 export const AppMap: React.FC<AppMapProps> = ({
@@ -23,11 +25,15 @@ export const AppMap: React.FC<AppMapProps> = ({
   zones,
   mode,
   onRegionChange,
-  mapRef
+  mapRef,
+  geocodingProvider
 }) => {
+  const isGoogle = geocodingProvider === GeocodingProvider.GOOGLE;
+
   return (
     <MapView
       ref={mapRef}
+      provider={isGoogle ? PROVIDER_GOOGLE : undefined}
       style={[styles.map, { backgroundColor: mode === MapMode.HEATMAP ? '#0f172a' : '#ffffff' }]}
       initialRegion={{
         latitude: location?.coords.latitude || 48.8566,
@@ -35,20 +41,22 @@ export const AppMap: React.FC<AppMapProps> = ({
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
       }}
-      mapType="none"
+      mapType={isGoogle ? (mode === MapMode.HEATMAP ? 'terrain' : 'standard') : 'none'}
       loadingEnabled={true}
       loadingBackgroundColor={mode === MapMode.HEATMAP ? '#0f172a' : '#ffffff'}
       onRegionChangeComplete={onRegionChange}
     >
-      <UrlTile
-        key={mode === MapMode.HEATMAP ? 'dark-tiles' : 'osm-tiles'}
-        urlTemplate={mode === MapMode.HEATMAP
-          ? "https://a.basemaps.cartocdn.com/{z}/{x}/{y}@2x.png"
-          : "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        }
-        maximumZ={19}
-        flipY={false}
-      />
+      {!isGoogle && (
+        <UrlTile
+          key={mode === MapMode.HEATMAP ? 'dark-tiles' : 'osm-tiles'}
+          urlTemplate={mode === MapMode.HEATMAP
+            ? "https://a.basemaps.cartocdn.com/{z}/{x}/{y}@2x.png"
+            : "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          }
+          maximumZ={19}
+          flipY={false}
+        />
+      )}
 
       {location && (
         <Marker

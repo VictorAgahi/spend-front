@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Modal, TouchableOpacity } from 'react-native';
-import { Plus, X } from 'lucide-react-native';
+import { X } from 'lucide-react-native';
 import { colors, spacing } from '../../theme';
 import { Input } from '../atoms/Input';
 import { Button } from '../atoms/Button';
@@ -10,12 +10,12 @@ import { AddressAutocomplete } from '../molecules/AddressAutocomplete';
 
 interface TransactionFormProps {
   onSubmit: (data: { name: string; price: number; tag: EventTag; address: string }) => void;
-  isLoading?: boolean;
+  isLoading: boolean;
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
   onSubmit,
-  isLoading = false,
+  isLoading,
 }) => {
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState('');
@@ -69,6 +69,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+              <AddressAutocomplete
+                label="Address"
+                placeholder="123 Street Name..."
+                value={address}
+                onChange={setAddress}
+              />
               <Input
                 label="Name"
                 placeholder="Market shopping..."
@@ -81,12 +87,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 keyboardType="numeric"
                 value={price}
                 onChangeText={setPrice}
-              />
-              <AddressAutocomplete
-                label="Address"
-                placeholder="123 Street Name..."
-                value={address}
-                onChange={setAddress}
               />
 
               <Typography variant="caption" color={colors.textMuted} style={styles.tagLabel}>

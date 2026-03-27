@@ -35,7 +35,6 @@ export default function Register() {
       success('Account created successfully!');
       router.replace('/(main)');
     } catch (e: any) {
-      // Automatic toast already handles via axios interceptor
     } finally {
       setLoading(false);
     }

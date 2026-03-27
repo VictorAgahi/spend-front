@@ -6,6 +6,7 @@ export interface CreateTransactionRequest {
   tag: EventTag;
   userId: string;
   address: string;
+  provider: string;
 }
 
 export interface TransactionResponse {

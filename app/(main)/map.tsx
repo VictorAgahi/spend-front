@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { View, StyleSheet, ActivityIndicator, Alert, TouchableOpacity, ScrollView } from 'react-native';
 import { AppMap } from '../../src/components/organisms/AppMap';
 import * as Location from 'expo-location';
@@ -14,6 +14,9 @@ import {
 import { colors, spacing } from '../../src/theme';
 import { useWebSocket } from '../../src/infra/websocket/useWebSocket';
 import { WsEvent } from '../../src/infra/websocket/types';
+import { geocodingConfig, GeocodingProvider } from '../../src/services/geocoding.config';
+import { Shield, ShieldAlert } from 'lucide-react-native';
+
 
 const REFRESH_COOLDOWN = 15000;
 
@@ -30,6 +33,21 @@ export default function Maps() {
   const mapRef = useRef<any>(null);
   const lastRequestTime = useRef(0);
   const [isPinging, setIsPinging] = useState(false);
+  const [provider, setProvider] = useState<GeocodingProvider>(geocodingConfig.getProvider());
+
+  useEffect(() => {
+    geocodingConfig.init().then(() => {
+      setProvider(geocodingConfig.getProvider());
+    });
+  }, []);
+
+  const toggleGeocodingProvider = async () => {
+    await geocodingConfig.toggleProvider();
+    const newProvider = geocodingConfig.getProvider();
+    setProvider(newProvider);
+    Alert.alert('Provider Switched', `Now using ${newProvider} strategy.`);
+  };
+
 
   const pingRandomTransaction = async () => {
     if (!location) return;
@@ -41,15 +59,13 @@ export default function Maps() {
       const tag = tags[Math.floor(Math.random() * tags.length)];
       const amount = Math.floor(Math.random() * 50) + 5;
 
-      // We'll use the current approximate location as address for the geocoder
-      // For the demo, we can just use a fixed center or try to use current coords
       await GeolocationService.trackTransaction({
         transactionId: `demo-${Date.now()}`,
-        userId: 'demo-user', // The backend will likely overwrite this with the real user from proxy
-        address: 'Rue de Tolbiac, Paris', // Or use the geocoder with coordinates if supported
+        userId: 'demo-user',
+        address: 'Rue de Tolbiac, Paris',
         amount,
         tag,
-        provider: 'OpenStreetMap'
+        provider // Utilisation du provider dynamique (Kill Switch)
       });
 
       setTimeout(() => fetchEverything(true), 1000);
@@ -175,6 +191,7 @@ export default function Maps() {
         mode={mode}
         markers={trackedTransactions}
         zones={zones}
+        geocodingProvider={provider}
       />
 
       <View style={styles.overlay}>
@@ -206,7 +223,21 @@ export default function Maps() {
           >
             <Flame size={20} color={mode === MapMode.HEATMAP ? colors.white : colors.textMuted} />
           </TouchableOpacity>
+
+          <View style={styles.divider} />
+
+          <TouchableOpacity
+            style={[styles.modeButton, provider === GeocodingProvider.GOOGLE && { backgroundColor: colors.warning }]}
+            onPress={toggleGeocodingProvider}
+          >
+            {provider === GeocodingProvider.OSM ? (
+              <Shield size={20} color={colors.textMuted} />
+            ) : (
+              <ShieldAlert size={20} color={colors.white} />
+            )}
+          </TouchableOpacity>
         </View>
+
 
         <View style={styles.tagFilterContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tagScrollContent}>
@@ -343,6 +374,11 @@ const styles = StyleSheet.create({
   },
   activeMode: {
     backgroundColor: colors.primary,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginVertical: 4,
   },
   actionButtons: {
     position: 'absolute',

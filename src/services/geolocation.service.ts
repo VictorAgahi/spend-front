@@ -1,4 +1,5 @@
 import { api } from './api.service';
+import { geocodingConfig } from './geocoding.config';
 import {
   GetNearbyTransactionsRequest,
   GetNearbyTransactionsResponse
@@ -17,7 +18,8 @@ export const GeolocationService = {
   },
 
   async trackTransaction(params: { transactionId: string; userId: string; address: string; amount: number; provider?: string; tag: string }): Promise<any> {
-    const { data } = await api.post('/geolocation/track', params);
+    const provider = params.provider || geocodingConfig.getProvider();
+    const { data } = await api.post('/geolocation/track', { ...params, provider });
     return data;
   }
 };
