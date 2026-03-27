@@ -50,11 +50,12 @@ export const AppMap: React.FC<AppMapProps> = ({
         <UrlTile
           key={mode === MapMode.HEATMAP ? 'dark-tiles' : 'osm-tiles'}
           urlTemplate={mode === MapMode.HEATMAP
-            ? "https://a.basemaps.cartocdn.com/{z}/{x}/{y}@2x.png"
-            : "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ? "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png"
+            : "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png"
           }
           maximumZ={19}
           flipY={false}
+          tileSize={256}
         />
       )}
 

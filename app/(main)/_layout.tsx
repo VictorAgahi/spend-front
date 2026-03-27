@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Home, Map, User } from 'lucide-react-native';
+import { Home, Map, User, Upload } from 'lucide-react-native';
 import { colors } from '../../src/theme';
 
 export default function MainLayout() {
@@ -35,6 +35,13 @@ export default function MainLayout() {
         options={{
           title: 'Maps',
           tabBarIcon: ({ color, size }) => <Map color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="upload"
+        options={{
+          title: 'Upload',
+          tabBarIcon: ({ color, size }) => <Upload color={color} size={size} />,
         }}
       />
       <Tabs.Screen
