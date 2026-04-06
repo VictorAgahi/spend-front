@@ -9,29 +9,83 @@ import { Toast, ToastType } from '../../src/components/molecules/Toast';
 import { colors, spacing } from '../../src/theme';
 import * as DocumentPicker from 'expo-document-picker';
 import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
+import { useWebSocket } from '../../src/infra/websocket/useWebSocket';
+import { WsEvent } from '../../src/infra/websocket/types';
+import { FileService } from '../../src/services/file.service';
 
 export default function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState<DocumentPicker.DocumentPickerAsset[]>([]);
   const [uploading, setUploading] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [fileUploadData, setFileUploadData] = useState<{ fileId: string; userId: string } | null>(null);
 
   const handleFilesSelected = (files: DocumentPicker.DocumentPickerAsset[]) => {
     setSelectedFiles(files);
   };
 
+  React.useEffect(() => {
+    if (fileUploadData) {
+      setToast({
+        message: `File ${fileUploadData.fileId} uploaded successfully for user ${fileUploadData.userId}`,
+        type: 'success'
+      });
+    }
+  }, [fileUploadData]);
+
+  useWebSocket(WsEvent.FILE_UPLOADED, setFileUploadData);
+
   const handleUpload = async () => {
     if (selectedFiles.length === 0) return;
     setUploading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 2000));
 
+
+    let uploadTimeout: NodeJS.Timeout;
+
+    const handleFileUploaded = (data: { fileId: string; userId: string }) => {
+      setFileUploadData(data);
+      clearTimeout(uploadTimeout);
+      setToast({
+        message: `File(s) uploaded successfully for user ${data.userId}`,
+        type: 'success'
+      });
+      setUploading(false);
+    };
+
+    uploadTimeout = setTimeout(() => {
+      setToast({
+        message: 'File upload timed out. Please try again.',
+        type: 'error'
+      });
+      setUploading(false);
+    }, 10000);
+
+
+
+
+
+    try {
+      let filesUploaded = [];
+    for (const f of selectedFiles) {
+      const file = await FileService.uploadFile(f);
+      filesUploaded.push(file);
+    }
+    } catch (error) {
+    setToast({
+      message: 'Upload failed. Please try again.',
+      type: 'error',
+    });
+  } finally {
+    setToast({
+      message: 'Upload process completed.',
+      type: 'info',
+    });
     setUploading(false);
     setSelectedFiles([]);
-    setToast({
-      message: 'Successfully sent to backend (Simulation)',
-      type: 'success'
-    });
+  }
+
+
   };
 
   const onRefresh = React.useCallback(() => {
